@@ -305,6 +305,7 @@ fork(void)
 
   pid = np->pid;
 
+  np -> syscall_mask = p -> syscall_mask;
   release(&np->lock);
 
   acquire(&wait_lock);
@@ -653,4 +654,16 @@ procdump(void)
     printf("%d %s %s", p->pid, state, p->name);
     printf("\n");
   }
+}
+
+int 
+nproc_active(void)
+{
+  int i;
+  int num = 0;
+  for (i = 0; i < NPROC; i ++) {
+    if (proc[i].state != UNUSED)
+      num ++;
+  }
+  return num;
 }
